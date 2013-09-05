@@ -1,6 +1,7 @@
 package akka.pipe.example.java.actors;
 
 import akka.actor.ActorRef;
+import akka.actor.Terminated;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
@@ -16,6 +17,7 @@ public class Ticker extends UntypedActor {
 
     public Ticker(ActorRef pipe) {
         this.pipe = pipe;
+        this.getContext().watch(pipe);
     }
 
     @Override
@@ -24,6 +26,11 @@ public class Ticker extends UntypedActor {
         log.debug("Received String message: {}", message);
         if (message.equals("Tick")) {
             pipe.tell("begin",getSelf());
+        } else if (message instanceof Terminated) {
+          final Terminated t = (Terminated) message;
+          if (t.getActor() == pipe) {
+            getSender().tell("finished", getSelf());
+          }
         } else {
             unhandled(message);
         }
