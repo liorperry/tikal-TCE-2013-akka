@@ -1,4 +1,4 @@
 tikal-TCE-2013-akka
 ===================
 
-Tkal's TCE Aug 2013 akka-java scalable software
+Tikal's TCE Aug 2013 akka-java scalable software
